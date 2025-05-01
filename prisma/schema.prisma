@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model OrderData {
+  unique_id  String   @id @default(cuid())
+  event_name String
+  created_at DateTime
+  updated_at DateTime
+  invitation Int
+  visitor    Int
+  note       String
+  price      Int
+  portion    Int
+
+  // Relations
+  customerId String?          @unique
+  customer   CustomerDetails? @relation(fields: [customerId], references: [id])
+
+  eventId    String?          @unique
+  event      EventDetails?    @relation(fields: [eventId], references: [id])
+
+  sections SectionTable[]
+
+  @@map("order_data")
+}
+
+model CustomerDetails {
+  id             String     @id @default(cuid())
+  customer_name  String
+  customer_phone String
+  customer_email String
+  order          OrderData? @relation
+
+  @@map("customer_details")
+}
+
+model EventDetails {
+  id             String     @id @default(cuid())
+  event_name     String
+  event_location String
+  event_date     DateTime
+  event_building String
+  event_category String
+  event_time     String
+  order          OrderData? @relation
+
+  @@map("event_details")
+}
+
+model SectionTable {
+  id                  String @id @default(cuid())
+  section_name        String
+  section_note        String
+  section_price       Int
+  section_portion     Int
+  section_total_price Int
+
+  order_id String
+  order    OrderData @relation(fields: [order_id], references: [unique_id])
+
+  portions PortionTable[]
+
+  @@map("section_table")
+}
+
+model PortionTable {
+  id                  String @id @default(cuid())
+  portion_name        String
+  portion_note        String
+  portion_count       Int
+  portion_price       Int
+  portion_total_price Int
+
+  section_id String
+  section    SectionTable @relation(fields: [section_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("portion_table")
+}
