@@ -6,6 +6,7 @@ export default route.get("/order/:id", async (req, res) => {
   try {
     const order = await prisma.orderData.findUnique({
       where: { unique_id: req.params.id },
+      
       include: {
         customer: true,
         event: true,

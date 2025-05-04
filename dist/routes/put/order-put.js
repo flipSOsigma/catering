@@ -18,7 +18,8 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const route = (0, express_1.Router)();
 exports.default = route.put("/order/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { event_name, created_at, updated_at, invitation, visitor, note, price, portion, customer, events, sections, } = req.body;
+    const { event_name, created_at, updated_at, invitation, visitor, note, price, portion, customer, event, sections, } = req.body;
+    console.log(req.body);
     try {
         const updatedOrder = yield prisma_1.default.orderData.update({
             where: { unique_id: id },
@@ -48,20 +49,20 @@ exports.default = route.put("/order/:id", (req, res) => __awaiter(void 0, void 0
                 event: {
                     upsert: {
                         update: {
-                            event_name: events.event_name,
-                            event_location: events.event_location,
-                            event_date: new Date(events.event_date),
-                            event_building: events.event_building,
-                            event_category: events.event_category,
-                            event_time: events.event_time,
+                            event_name: event.event_name,
+                            event_location: event.event_location,
+                            event_date: new Date(event.event_date),
+                            event_building: event.event_building,
+                            event_category: event.event_category,
+                            event_time: event.event_time,
                         },
                         create: {
-                            event_name: events.event_name,
-                            event_location: events.event_location,
-                            event_date: new Date(events.event_date),
-                            event_building: events.event_building,
-                            event_category: events.event_category,
-                            event_time: events.event_time,
+                            event_name: event.event_name,
+                            event_location: event.event_location,
+                            event_date: new Date(event.event_date),
+                            event_building: event.event_building,
+                            event_category: event.event_category,
+                            event_time: event.event_time,
                         },
                     },
                 },

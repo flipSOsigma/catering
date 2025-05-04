@@ -10,8 +10,8 @@ datasource db {
 model OrderData {
   unique_id  String   @id @default(cuid())
   event_name String
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
   invitation Int
   visitor    Int
   note       String
@@ -61,8 +61,8 @@ model SectionTable {
   section_portion     Int
   section_total_price Int
 
-  order_id String
-  order    OrderData @relation(fields: [order_id], references: [unique_id])
+  order_id String?
+  order    OrderData? @relation(fields: [order_id], references: [unique_id])
 
   portions PortionTable[]
 
@@ -71,14 +71,14 @@ model SectionTable {
 
 model PortionTable {
   id                  String @id @default(cuid())
-  portion_name        String
-  portion_note        String
-  portion_count       Int
-  portion_price       Int
-  portion_total_price Int
+  portion_name        String?
+  portion_note        String?
+  portion_count       Int?
+  portion_price       Int?
+  portion_total_price Int?
 
-  section_id String
-  section    SectionTable @relation(fields: [section_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  section_id String?
+  section    SectionTable? @relation(fields: [section_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("portion_table")
 }

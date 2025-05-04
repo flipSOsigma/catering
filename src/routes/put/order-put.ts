@@ -17,9 +17,11 @@ export default route.put("/order/:id", async (req, res) => {
     price,
     portion,
     customer,
-    events,
+    event,
     sections,
   } = req.body;
+
+  console.log(req.body);
 
   try {
     const updatedOrder = await prisma.orderData.update({
@@ -52,20 +54,20 @@ export default route.put("/order/:id", async (req, res) => {
         event: {
           upsert: {
             update: {
-              event_name: events.event_name,
-              event_location: events.event_location,
-              event_date: new Date(events.event_date),
-              event_building: events.event_building,
-              event_category: events.event_category,
-              event_time: events.event_time,
+              event_name: event.event_name,
+              event_location: event.event_location,
+              event_date: new Date(event.event_date),
+              event_building: event.event_building,
+              event_category: event.event_category,
+              event_time: event.event_time,
             },
             create: {
-              event_name: events.event_name,
-              event_location: events.event_location,
-              event_date: new Date(events.event_date),
-              event_building: events.event_building,
-              event_category: events.event_category,
-              event_time: events.event_time,
+              event_name: event.event_name,
+              event_location: event.event_location,
+              event_date: new Date(event.event_date),
+              event_building: event.event_building,
+              event_category: event.event_category,
+              event_time: event.event_time,
             },
           },
         },

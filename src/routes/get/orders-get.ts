@@ -14,6 +14,9 @@ export default route.get("/orders", async (req, res) => {
           },
         },
       },
+      orderBy: {
+        created_at: "desc",
+      }
     });
     res.json(orders);
   } catch (error) {

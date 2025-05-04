@@ -27,6 +27,9 @@ exports.default = route.get("/orders", (req, res) => __awaiter(void 0, void 0, v
                     },
                 },
             },
+            orderBy: {
+                created_at: "desc",
+            }
         });
         res.json(orders);
     }
