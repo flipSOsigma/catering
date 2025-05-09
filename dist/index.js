@@ -34,7 +34,10 @@ const fs_1 = __importDefault(require("fs"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: 'https://catering-fe.vercel.app',
+    origin: [
+        'http://localhost:5173',
+        'https://catering-fe.vercel.app'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 const port = process.env.PORT;
