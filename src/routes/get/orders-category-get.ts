@@ -2,9 +2,8 @@ import { Router } from "express";
 import prisma from "../../lib/prisma";
 const route = Router()
 
-export default route.get("/order/:category", async (req, res) => {
+export default route.get("/order/category/:category", async (req, res) => {
   const { category } =  req.params
-  const capitalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
 
   try {
     const orders = await prisma.orderData.findMany({
@@ -19,7 +18,7 @@ export default route.get("/order/:category", async (req, res) => {
       },
       where: {
         event: {
-          event_category: capitalizedCategory
+          event_category: category
         }
       },
       orderBy: {

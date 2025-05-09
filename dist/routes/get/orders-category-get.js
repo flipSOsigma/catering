@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const route = (0, express_1.Router)();
-exports.default = route.get("/order/:category", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.default = route.get("/order/category/:category", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { category } = req.params;
     try {
         const orders = yield prisma_1.default.orderData.findMany({
@@ -27,6 +27,11 @@ exports.default = route.get("/order/:category", (req, res) => __awaiter(void 0, 
                         portions: true,
                     },
                 },
+            },
+            where: {
+                event: {
+                    event_category: category
+                }
             },
             orderBy: {
                 created_at: "desc",

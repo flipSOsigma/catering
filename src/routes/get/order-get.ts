@@ -2,7 +2,8 @@ import { Router } from "express";
 import prisma from "../../lib/prisma";
 const route = Router()
 
-export default route.get("/orders", async (req, res) => {
+export default route.get("/order/:id", async (req, res) => {
+  const { id } = req.params;
   try {
     const orders = await prisma.orderData.findMany({
       include: {
@@ -13,6 +14,9 @@ export default route.get("/orders", async (req, res) => {
             portions: true,
           },
         },
+      },
+      where: {
+        unique_id: id
       },
       orderBy: {
         created_at: "desc",
