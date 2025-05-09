@@ -6,7 +6,10 @@ import fs from 'fs'
 
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: 'https://catering-fe.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}))
 
 const port = process.env.PORT
 app.get('/', (req, res) => {
