@@ -36,4 +36,10 @@ exports.default = route.get("/orders", (req, res) => __awaiter(void 0, void 0, v
     catch (error) {
         res.status(500).json({ error: "Failed to fetch orders" });
     }
+    res.json({
+        data: [],
+        error: "",
+        length: 0,
+        status: 200
+    });
 }));
