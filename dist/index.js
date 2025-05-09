@@ -41,6 +41,9 @@ const port = process.env.PORT;
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+app.get('/testing', (req, res) => {
+    res.json({ msg: 'Hallo Jawa!' });
+});
 const routesPath = path_1.default.resolve(__dirname, "routes");
 const routesFolder = fs_1.default.readdirSync(routesPath);
 function loadRoutesRecursively(dir) {
