@@ -3,14 +3,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_URL")
-// }
 
 model OrderData {
   unique_id  String   @id @default(cuid())
@@ -27,8 +23,8 @@ model OrderData {
   customerId String?          @unique
   customer   CustomerDetails? @relation(fields: [customerId], references: [id])
 
-  eventId    String?          @unique
-  event      EventDetails?    @relation(fields: [eventId], references: [id])
+  eventId String?       @unique
+  event   EventDetails? @relation(fields: [eventId], references: [id])
 
   sections SectionTable[]
 
@@ -75,7 +71,7 @@ model SectionTable {
 }
 
 model PortionTable {
-  id                  String @id @default(cuid())
+  id                  String  @id @default(cuid())
   portion_name        String?
   portion_note        String?
   portion_count       Int?
@@ -86,4 +82,21 @@ model PortionTable {
   section    SectionTable? @relation(fields: [section_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("portion_table")
+}
+
+model Users {
+  id             String           @id @default(cuid())
+  username       String           @unique
+  password       String
+  createdAt      DateTime         @default(now())
+  authentications Authentication[]  // 1-to-many with cascade
+}
+
+model Authentication {
+  id         String   @id @default(cuid())
+  token      String
+  expired    DateTime
+  createdAt  DateTime @default(now())
+  userId     String
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

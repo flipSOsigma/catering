@@ -13,33 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const prisma_1 = __importDefault(require("../../lib/prisma"));
-const route = (0, express_1.Router)();
-exports.default = route.get("/order/category/:category", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { category } = req.params;
-    try {
-        const orders = yield prisma_1.default.orderData.findMany({
-            include: {
-                customer: true,
-                event: true,
-                sections: {
-                    include: {
-                        portions: true,
-                    },
-                },
-            },
-            where: {
-                event: {
-                    event_category: category
-                }
-            },
-            orderBy: {
-                created_at: "desc",
-            }
-        });
-        res.json(orders);
-    }
-    catch (error) {
-        res.status(500).json({ error: "Failed to fetch orders" });
-    }
+const prisma_1 = __importDefault(require("../../../lib/prisma"));
+const router = (0, express_1.Router)();
+exports.default = router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const db = yield prisma_1.default.users.findMany();
+    res.json({
+        data: db,
+        status: 200
+    });
 }));

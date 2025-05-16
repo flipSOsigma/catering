@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prisma from "../../lib/prisma";
+import prisma from "../../../lib/prisma";
 const route = Router()
 
 export default route.get("/orders", async (req, res) => {
