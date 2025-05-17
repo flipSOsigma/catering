@@ -31,7 +31,7 @@ router.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* (
             .createHmac("sha256", key)
             .update(password.toString())
             .digest("hex");
-        const findUser = yield prisma_1.default.users.findUnique({
+        const findUser = yield prisma_1.default.users.findMany({
             where: { username },
         });
         if (!findUser) {
@@ -40,7 +40,7 @@ router.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 msg: "username tidak ditemukan",
             });
         }
-        if (findUser.password !== hashedPassword) {
+        if (findUser[0].password !== hashedPassword) {
             return res.status(401).json({
                 status: 401,
                 msg: "password anda salah",
@@ -50,7 +50,7 @@ router.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const auth = yield prisma_1.default.authentication.create({
             data: {
                 token,
-                userId: findUser.id,
+                userId: findUser[0].id,
                 expired: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 hari
             },
         });

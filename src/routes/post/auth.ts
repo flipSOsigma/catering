@@ -23,7 +23,7 @@ router.post("/auth", async (req, res) => {
       .update(password.toString())
       .digest("hex");
 
-    const findUser = await prisma.users.findUnique({
+    const findUser = await prisma.users.findMany({
       where: { username },
     });
 
@@ -34,7 +34,7 @@ router.post("/auth", async (req, res) => {
       });
     }
 
-    if (findUser.password !== hashedPassword) {
+    if (findUser[0].password !== hashedPassword) {
       return res.status(401).json({
         status: 401,
         msg: "password anda salah",
@@ -46,7 +46,7 @@ router.post("/auth", async (req, res) => {
     const auth = await prisma.authentication.create({
       data: {
         token,
-        userId: findUser.id,
+        userId: findUser[0].id,
         expired: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 hari
       },
     });
