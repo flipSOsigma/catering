@@ -9,7 +9,8 @@ app.use(express.json())
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://catering-fe.vercel.app'
+    'https://catering-fe.vercel.app',
+    'https://ct.microesp.my.id'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))

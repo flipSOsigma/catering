@@ -36,7 +36,8 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: [
         'http://localhost:5173',
-        'https://catering-fe.vercel.app'
+        'https://catering-fe.vercel.app',
+        'https://ct.microesp.my.id'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
