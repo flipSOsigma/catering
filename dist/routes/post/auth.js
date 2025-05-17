@@ -18,7 +18,6 @@ const crypto_1 = __importDefault(require("crypto"));
 const router = (0, express_1.Router)();
 router.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
-    console.log(username, password);
     if (!username || !password) {
         return res.status(400).json({
             status: 400,
