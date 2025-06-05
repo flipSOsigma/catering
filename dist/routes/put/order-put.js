@@ -18,20 +18,21 @@ const prisma_1 = __importDefault(require("../../lib/prisma"));
 const route = (0, express_1.Router)();
 exports.default = route.put("/order/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { event_name, created_at, updated_at, invitation, visitor, note, price, portion, customer, event, sections, } = req.body;
-    console.log(req.body);
+    const { event_name, created_at, updated_at, invitation, visitor, note, price, portion, customer, event, sections, updated_by } = req.body;
+    console.log(updated_by);
     try {
         const updatedOrder = yield prisma_1.default.orderData.update({
             where: { unique_id: id },
             data: {
                 event_name,
                 created_at: new Date(created_at),
-                updated_at: new Date(updated_at),
+                updated_at: new Date(Date.now()),
                 invitation,
                 visitor,
                 note,
                 price,
                 portion,
+                updated_by,
                 customer: {
                     upsert: {
                         update: {

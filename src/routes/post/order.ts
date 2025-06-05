@@ -1,23 +1,43 @@
-import express from 'express';
-import multer from 'multer';
-import { parseOrderXLS } from '../../../lib/xlsx-configuration';
-import nodemailer from 'nodemailer';  // Add this import
-import prisma from '../../../lib/prisma'; // Assuming you import prisma client here
+import { Router } from "express";
+import nodemailer from "nodemailer";
+import prisma from "../../lib/prisma";
 
-const upload = multer();
-const router = express.Router();
+const route = Router()
 
-router.post('/order/xlsx', upload.single('file'), async (req, res) => {
-  if (!req.file) return res.status(400).send('No file uploaded');
+interface IPortion {
+  id: string;
+  portion_name: string;
+  portion_count: number;
+  portion_price: number;
+  portion_total_price: number;
+}
 
+interface ISection {
+  id: string;
+  section_name: string;
+  portions: IPortion[];
+}
+
+interface ICustomer {
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
+}
+
+interface IEvent {
+  event_name: string;
+  event_date: string;
+  event_time: string;
+  event_building: string;
+  event_location: string;
+  event_category: string;
+}
+
+
+export default route.post("/order", async (req, res) => {
   try {
-    // Parse the Excel buffer to get order data
-    const orderData = parseOrderXLS(req.file.buffer);
-
-    // Destructure from parsed data for clarity
     const {
       event_name,
-      created_at,
       invitation,
       visitor,
       note,
@@ -26,19 +46,20 @@ router.post('/order/xlsx', upload.single('file'), async (req, res) => {
       customer,
       event,
       sections,
-    } = orderData;
+      created_by
+    } = req.body;
 
-    // Create order in DB using prisma
     const newOrder = await prisma.orderData.create({
       data: {
         event_name,
-        created_at,
+        created_at: new Date(),
         updated_at: new Date(),
         invitation,
         visitor,
         note,
         price,
         portion,
+        created_by,
         customer: {
           create: {
             customer_name: customer.customer_name,
@@ -57,7 +78,8 @@ router.post('/order/xlsx', upload.single('file'), async (req, res) => {
           },
         },
         sections: {
-          create: sections.map(section => {
+          create: sections.map((section: any) => {
+            // Base section data
             const sectionData: any = {
               section_name: section.section_name,
               section_note: section.section_note,
@@ -66,11 +88,12 @@ router.post('/order/xlsx', upload.single('file'), async (req, res) => {
               section_total_price: section.section_total_price,
             };
 
+            // Only add portions if they exist and are not empty
             if (section.portions && section.portions.length > 0) {
               sectionData.portions = {
-                create: section.portions.map(portion => ({
+                create: section.portions.map((portion: any) => ({
                   portion_name: portion.portion_name,
-                  portion_note: portion.portion_note || '',
+                  portion_note: portion.portion_note,
                   portion_count: portion.portion_count,
                   portion_price: portion.portion_price,
                   portion_total_price: portion.portion_total_price,
@@ -126,8 +149,8 @@ router.post('/order/xlsx', upload.single('file'), async (req, res) => {
             </tr>
           </thead>
           <tbody>
-            ${sections.map(section => 
-              section.portions.map(portion => `
+            ${sections.map((section: ISection) => 
+              section.portions.map((portion: IPortion) => `
                 <tr>
                   <td>${portion.portion_name}</td>
                   <td>${portion.portion_count}</td>
@@ -146,36 +169,30 @@ router.post('/order/xlsx', upload.single('file'), async (req, res) => {
       </div>
     `;
 
-    // Setup nodemailer transporter
+
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: 'smtp.gmail.com', // For Gmail
       port: 587,
       secure: false,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.APP_PASSWORD,
+        user: process.env.EMAIL_USER, // your Gmail
+        pass: process.env.APP_PASSWORD, // App Password (not your Gmail password)
       },
     });
 
-    // Send confirmation email
     const info = await transporter.sendMail({
       from: `Marketing Anisa Catering | <${process.env.EMAIL_USER}>`,
       to: customer.customer_email,
       subject: "Anisa Catering Order Confirmation",
-      html,
+      html
     });
 
-    // Send success response with new order data and email info
     res.status(201).json({
       data: newOrder,
-      email: info,
-      success: true,
+      email: info
     });
-
   } catch (error) {
-    console.error('Order XLSX upload failed:', error);
-    res.status(500).send('Failed to parse or save file');
+    console.error("Create Order Error:", error);
+    res.status(500).json({ error: "Failed to create order" });
   }
 });
-
-export default router;

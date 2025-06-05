@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const multer_1 = __importDefault(require("multer"));
-const xlsx_configuration_1 = require("../../../lib/xlsx-configuration");
+const xlsx_configuration_1 = require("../../lib/xlsx-configuration");
 const nodemailer_1 = __importDefault(require("nodemailer")); // Add this import
-const prisma_1 = __importDefault(require("../../../lib/prisma")); // Assuming you import prisma client here
+const prisma_1 = __importDefault(require("../../lib/prisma")); // Assuming you import prisma client here
 const upload = (0, multer_1.default)();
 const router = express_1.default.Router();
 router.post('/order/xlsx', upload.single('file'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,6 +38,7 @@ router.post('/order/xlsx', upload.single('file'), (req, res) => __awaiter(void 0
                 note,
                 price,
                 portion,
+                created_by: 'admin',
                 customer: {
                     create: {
                         customer_name: customer.customer_name,

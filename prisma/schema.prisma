@@ -18,8 +18,9 @@ model OrderData {
   note       String
   price      Int
   portion    Int
+  updated_by String @default("system")
+  created_by String @default("system")
 
-  // Relations
   customerId String?          @unique
   customer   CustomerDetails? @relation(fields: [customerId], references: [id])
 

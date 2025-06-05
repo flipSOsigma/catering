@@ -33,7 +33,7 @@ router.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const findUser = yield prisma_1.default.users.findMany({
             where: { username },
         });
-        if (!findUser) {
+        if (findUser.length <= 0) {
             return res.status(404).json({
                 status: 404,
                 msg: "username tidak ditemukan",
@@ -56,7 +56,7 @@ router.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return res.status(200).json({
             status: 200,
             msg: "Login success",
-            data: auth,
+            data: { auth, user: findUser[0] },
         });
     }
     catch (error) {

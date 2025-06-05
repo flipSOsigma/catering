@@ -19,9 +19,10 @@ export default route.put("/order/:id", async (req, res) => {
     customer,
     event,
     sections,
+    updated_by
   } = req.body;
 
-  console.log(req.body);
+  console.log(updated_by);
 
   try {
     const updatedOrder = await prisma.orderData.update({
@@ -29,12 +30,13 @@ export default route.put("/order/:id", async (req, res) => {
       data: {
         event_name,
         created_at: new Date(created_at),
-        updated_at: new Date(updated_at),
+        updated_at: new Date(Date.now()),
         invitation,
         visitor,
         note,
         price,
         portion,
+        updated_by,
 
         customer: {
           upsert: {

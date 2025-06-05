@@ -14,6 +14,8 @@ router.post("/auth", async (req, res) => {
     });
   }
 
+  
+
   try {
     const key = process.env.CRYPTO_KEY || "KEY";
 
@@ -26,7 +28,7 @@ router.post("/auth", async (req, res) => {
       where: { username },
     });
 
-    if (!findUser) {
+    if (findUser.length <= 0) {
       return res.status(404).json({
         status: 404,
         msg: "username tidak ditemukan",
@@ -53,7 +55,7 @@ router.post("/auth", async (req, res) => {
     return res.status(200).json({
       status: 200,
       msg: "Login success",
-      data: auth,
+      data: {auth, user: findUser[0]},
     });
   } catch (error) {
     console.error("Auth error:", error);

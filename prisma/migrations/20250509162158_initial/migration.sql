@@ -11,6 +11,7 @@ CREATE TABLE "order_data" (
     "portion" INTEGER NOT NULL,
     "customerId" TEXT,
     "eventId" TEXT,
+    
 
     CONSTRAINT "order_data_pkey" PRIMARY KEY ("unique_id")
 );
@@ -81,3 +82,4 @@ ALTER TABLE "section_table" ADD CONSTRAINT "section_table_order_id_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "portion_table" ADD CONSTRAINT "portion_table_section_id_fkey" FOREIGN KEY ("section_id") REFERENCES "section_table"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

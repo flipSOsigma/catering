@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const prisma_1 = __importDefault(require("../../../lib/prisma"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const prisma_1 = __importDefault(require("../../lib/prisma"));
 const route = (0, express_1.Router)();
 exports.default = route.post("/order", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { event_name, invitation, visitor, note, price, portion, customer, event, sections, } = req.body;
+        const { event_name, invitation, visitor, note, price, portion, customer, event, sections, created_by } = req.body;
         const newOrder = yield prisma_1.default.orderData.create({
             data: {
                 event_name,
@@ -29,6 +29,7 @@ exports.default = route.post("/order", (req, res) => __awaiter(void 0, void 0, v
                 note,
                 price,
                 portion,
+                created_by,
                 customer: {
                     create: {
                         customer_name: customer.customer_name,
